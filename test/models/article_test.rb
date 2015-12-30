@@ -10,4 +10,13 @@ class ArticleTest < ActiveSupport::TestCase
     article = Article.new(title: "abcde")
     assert article.valid?
   end
+
+  test "destroys dependent comments" do
+    article = Article.create(title: 'title')
+    2.times { article.comments.create }
+
+    assert_difference('Comment.count', -2) do
+      article.destroy
+    end
+  end
 end
