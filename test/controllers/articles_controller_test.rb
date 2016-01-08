@@ -68,6 +68,15 @@ class ArticlesControllerTest < ActionController::TestCase
       assert_redirected_to article_path(assigns(:article))
     end
 
+    test "should render :new if cannot create" do
+      assert_no_difference('Article.count') do
+        post :create, article: { title: '' } # Invalid title
+      end
+
+      assert_template :new
+      assert_response :success
+    end
+
     test "should show article" do
       get :show, id: @article
       assert_response :success
@@ -81,6 +90,13 @@ class ArticlesControllerTest < ActionController::TestCase
     test "should update article" do
       patch :update, id: @article, article: { title: 'New Title' }
       assert_redirected_to article_path(assigns(:article))
+    end
+
+    test "should render :edit if cannot update" do
+      patch :update, id: @article, article: { title: '' } # Invalid title
+
+      assert_template :edit
+      assert_response :success
     end
 
     test "should destroy article" do
